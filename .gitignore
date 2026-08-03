@@ -1,0 +1,38 @@
+# Security & Environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Runtime data & outputs
+schedule.json
+ai_news_data.json
+linkedin_post.json
+image_prompt.txt
+scheduled_history.json
+infographic-run-log.json
+infographic_data.json
+linkedin-infographic-*.png
+linkedin_posts_*.txt
+linkedin_posts_today.txt
+carousel-routine/
+
+# Python & Dependencies
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+node_modules/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
