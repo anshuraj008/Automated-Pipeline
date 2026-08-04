@@ -20,9 +20,14 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false
 
       - name: Fetch Latest Technical News Feeds
         run: uv run python fetch_ai_news_rss.py
+
+      - name: Generate Post Content
+        run: uv run python auto_generate_post.py
 
       - name: Validate & Schedule Post Live
         env:
