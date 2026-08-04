@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Automatically create linkedin_post.json and image_prompt.txt from the latest fetched news."""
+"""Automatically create rich human-formatted linkedin_post.json and image_prompt.txt."""
 
 import json
 import os
@@ -27,20 +27,52 @@ def main():
     title = top_story.get("title", "").strip()
     source_url = top_story.get("url", "").strip()
     source = top_story.get("source", "Tech Update").strip()
-    category = top_story.get("category", "Technology").strip()
+    category = top_story.get("category", "Full Stack & Web Dev").strip()
     description = top_story.get("description", "").strip()
 
-    # Truncate caption to <= 280 chars
-    max_len = 280
-    caption_text = f"[{category}] {title}"
-    if description and len(caption_text) + len(description) + 3 <= max_len:
-        caption_text = f"{caption_text}: {description}"
+    clean_desc = description.replace("\n", " ").strip()
+    if len(clean_desc) > 350:
+        clean_desc = clean_desc[:350] + "..."
 
-    if len(caption_text) > max_len:
-        caption_text = caption_text[: max_len - 3] + "..."
+    # Relevant developer & admin hashtags
+    hashtags = [
+        "#FullStackDeveloper",
+        "#WebDevelopment",
+        "#SoftwareEngineering",
+        "#SystemDesign",
+        "#DSA",
+        "#SelfGrowth",
+        "#DeveloperLife",
+        "#TechCommunity",
+    ]
+    hashtags_str = " ".join(hashtags)
+
+    # Human-formatted LinkedIn Post (Rich, engaging, professional)
+    linkedin_caption = f"""🚀 {title}
+
+As full-stack developers and engineers, staying ahead of modern web architecture and technical shifts is key to building fast, scalable applications.
+
+💡 Key Insight:
+{clean_desc if clean_desc else title}
+
+🛠️ Core Takeaways for Developers:
+• Optimize your system architecture & state management early.
+• Focus on clean code, security best practices, and user experience.
+• Prevent technical debt before scaling in production.
+
+What are your thoughts on this? How are you handling this in your current stack? Drop your thoughts below! 👇
+
+{hashtags_str}"""
+
+    # Concise Twitter/X Tweet (<= 280 chars)
+    short_title = title[:150]
+    x_caption = f"🚀 [{category}] {short_title}\n\nKey Takeaway: {clean_desc[:70]}...\n\n#FullStackDeveloper #WebDev #DSA"
+    if len(x_caption) > 280:
+        x_caption = f"🚀 [{category}] {short_title[:170]}...\n\n#FullStackDeveloper #WebDev"
 
     post_data = {
-        "caption": caption_text,
+        "caption": linkedin_caption,
+        "x_caption": x_caption,
         "source_url": source_url,
         "headline": title,
     }
@@ -58,7 +90,7 @@ def main():
     with open(PROMPT_PATH, "w", encoding="utf-8") as f:
         f.write(prompt_text)
 
-    print(f"Auto-generated linkedin_post.json and image_prompt.txt for top story: {title[:50]}...")
+    print(f"Auto-generated human-styled linkedin_post.json ({len(linkedin_caption)} chars) and image_prompt.txt")
 
 
 if __name__ == "__main__":

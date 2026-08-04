@@ -39,8 +39,12 @@ import json
 import sys
 from datetime import datetime, timedelta, timezone
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 from buffer_client import create_post, get_channels, get_organizations
 from env_utils import get_env
+
 
 IST_OFFSET = timedelta(hours=5, minutes=30)
 UTC = timezone.utc
@@ -168,19 +172,23 @@ def schedule_posts(schedule, linkedin_id, x_id, dry_run=False):
         elif target == "x":
             channels_to_post = [("X", x_ch_id, None)]
 
+        x_caption = post.get("x_caption", "").strip()
+
         for platform, channel_id, comment in channels_to_post:
             if not channel_id:
                 print(f"Post {i + 1}: SKIP {platform} (no channel ID)")
                 continue
+
+            text_content = x_caption if (platform == "X" and x_caption) else caption
 
             label = (
                 f"Post {i + 1}/{len(posts)} | {platform} | {date_str} {time_ist} IST"
             )
 
             limit = LINKEDIN_MAX_CHARS if platform == "LinkedIn" else X_MAX_CHARS
-            if len(caption) > limit and not assets:
+            if len(text_content) > limit and not assets:
                 print(
-                    f"  WARNING: {label} caption is {len(caption)} chars, "
+                    f"  WARNING: {label} caption is {len(text_content)} chars, "
                     f"over the {platform} limit of {limit}. Buffer may reject or truncate this post."
                 )
 
@@ -190,7 +198,7 @@ def schedule_posts(schedule, linkedin_id, x_id, dry_run=False):
 
             if dry_run:
                 print(f"[DRY RUN] {label}")
-                print(f"  Caption ({len(caption)} chars): {caption[:120]}...")
+                print(f"  Caption ({len(text_content)} chars): {text_content[:120]}...")
                 if assets:
                     print(f"  Media: {len(assets)} image(s)")
                 if metadata:
@@ -201,7 +209,7 @@ def schedule_posts(schedule, linkedin_id, x_id, dry_run=False):
             try:
                 post_result = create_post(
                     channel_id=channel_id,
-                    text=caption,
+                    text=text_content,
                     due_at=due_at,
                     mode="customScheduled",
                     assets=assets,
@@ -213,6 +221,7 @@ def schedule_posts(schedule, linkedin_id, x_id, dry_run=False):
                 err_msg = f"{label}: {e}"
                 print(f"  ERROR: {err_msg}")
                 results["errors"].append({"platform": platform, "error": str(e)})
+
 
     return results
 

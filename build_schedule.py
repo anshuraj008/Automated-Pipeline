@@ -23,12 +23,16 @@ def main():
         post = json.load(f)
 
     caption = str(post.get("caption", "")).strip()
+    x_caption = str(post.get("x_caption", "")).strip()
     if not caption:
         raise SystemExit("Generated post has no caption.")
-    if len(caption) > 280 and args.target == "both":
-        raise SystemExit(
-            f"Post is {len(caption)} characters; a shared LinkedIn/X post must be <=280 characters."
-        )
+
+    if not x_caption:
+        if len(caption) <= 280:
+            x_caption = caption
+        else:
+            x_caption = caption[:277] + "..."
+
 
     publish_date = datetime.now().date()
     if args.start_tomorrow:
@@ -39,6 +43,7 @@ def main():
         "posts": [
             {
                 "caption": caption,
+                "x_caption": x_caption,
                 "type": "image" if args.image_url else "text",
                 "date": publish_date.isoformat(),
                 "time_ist": args.time,
@@ -47,6 +52,7 @@ def main():
                 "linkedin_first_comment": "",
                 "source_url": post.get("source_url", ""),
             }
+
         ],
     }
 
