@@ -20,8 +20,9 @@ def main():
     caption = str(post.get("caption", "")).strip()
     if not caption:
         raise SystemExit("linkedin_post.json has an empty caption.")
-    if len(caption) > 280:
-        raise SystemExit(f"Caption is {len(caption)} characters; maximum is 280.")
+    if len(caption) > 3000:
+        raise SystemExit(f"Caption is {len(caption)} characters; maximum is 3000.")
+
     if not post.get("source_url"):
         raise SystemExit("linkedin_post.json must include source_url.")
 
