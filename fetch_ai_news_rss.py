@@ -12,65 +12,84 @@ from env_utils import new_ssl_context
 ctx = new_ssl_context()
 
 feeds = [
-    # AI & Tech Trends
+    # AI Technologies & Emerging Tech
     {
         "source": "TechCrunch AI",
-        "category": "AI",
+        "category": "AI Technologies",
         "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
     },
     {
         "source": "VentureBeat AI",
-        "category": "AI",
+        "category": "AI Technologies",
         "url": "https://venturebeat.com/category/ai/feed/",
     },
     {
-        "source": "Wired AI",
-        "category": "AI",
-        "url": "https://www.wired.com/feed/tag/ai/latest/rss",
-    },
-    {
         "source": "MIT Tech Review AI",
-        "category": "AI",
+        "category": "AI Technologies",
         "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
     },
-    # Full Stack & Web Development
+    # Full Stack Development
+    {
+        "source": "Dev.to React & Node",
+        "category": "Full Stack Development",
+        "url": "https://dev.to/feed/tag/react",
+    },
+    {
+        "source": "Dev.to Node.js",
+        "category": "Full Stack Development",
+        "url": "https://dev.to/feed/tag/node",
+    },
+    # Web Development
     {
         "source": "Dev.to Web Dev",
-        "category": "Full Stack & Web Dev",
+        "category": "Web Development",
         "url": "https://dev.to/feed/tag/webdev",
     },
     {
         "source": "Dev.to JavaScript",
-        "category": "Full Stack & Web Dev",
+        "category": "Web Development",
         "url": "https://dev.to/feed/tag/javascript",
     },
     {
-        "source": "Dev.to React",
-        "category": "Full Stack & Web Dev",
-        "url": "https://dev.to/feed/tag/react",
-    },
-    {
         "source": "Smashing Magazine",
-        "category": "Full Stack & Web Dev",
+        "category": "Web Development",
         "url": "https://www.smashingmagazine.com/feed/",
     },
-    {
-        "source": "Hacker News Top",
-        "category": "Tech & Full Stack",
-        "url": "https://hnrss.org/frontpage?points=100",
-    },
-    # DSA & System Design
+    # DSA & Algorithms
     {
         "source": "Dev.to DSA & Algorithms",
-        "category": "DSA & System Design",
+        "category": "DSA & Algorithms",
         "url": "https://dev.to/feed/tag/dsa",
     },
     {
+        "source": "Dev.to Python Coding",
+        "category": "DSA & Algorithms",
+        "url": "https://dev.to/feed/tag/python",
+    },
+    # System Design & Architecture
+    {
+        "source": "Dev.to Architecture",
+        "category": "System Design",
+        "url": "https://dev.to/feed/tag/architecture",
+    },
+    {
+        "source": "Dev.to DevOps & Backend",
+        "category": "System Design",
+        "url": "https://dev.to/feed/tag/devops",
+    },
+    # Trending Computer Science Engineering
+    {
         "source": "Dev.to Computer Science",
-        "category": "DSA & System Design",
+        "category": "Trending Computer Science",
         "url": "https://dev.to/feed/tag/compsci",
     },
+    {
+        "source": "Hacker News Top Tech",
+        "category": "Trending Computer Science",
+        "url": "https://hnrss.org/frontpage?points=100",
+    },
 ]
+
 
 
 headers = {

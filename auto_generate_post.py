@@ -34,41 +34,101 @@ def main():
     if len(clean_desc) > 350:
         clean_desc = clean_desc[:350] + "..."
 
-    # Relevant developer & admin hashtags
-    hashtags = [
-        "#FullStackDeveloper",
-        "#WebDevelopment",
-        "#SoftwareEngineering",
-        "#SystemDesign",
-        "#DSA",
-        "#SelfGrowth",
-        "#DeveloperLife",
-        "#TechCommunity",
-    ]
+    # Determine CS Engineering Category Tag & Hashtags
+    cat_lower = category.lower()
+    if "full stack" in cat_lower or "react" in cat_lower or "node" in cat_lower:
+        cat_badge = "[Full Stack Development]"
+        hashtags = [
+            "#FullStackDevelopment",
+            "#WebDevelopment",
+            "#Frontend",
+            "#Backend",
+            "#SystemDesign",
+            "#SoftwareEngineering",
+            "#SelfGrowth",
+            "#TechCommunity",
+        ]
+    elif "dsa" in cat_lower or "algorithm" in cat_lower or "python" in cat_lower:
+        cat_badge = "[DSA & Algorithms]"
+        hashtags = [
+            "#DataStructures",
+            "#Algorithms",
+            "#DSA",
+            "#ProblemSolving",
+            "#ComputerScience",
+            "#SoftwareEngineering",
+            "#SelfGrowth",
+            "#TechCommunity",
+        ]
+    elif "system design" in cat_lower or "architecture" in cat_lower or "devops" in cat_lower:
+        cat_badge = "[System Design & Architecture]"
+        hashtags = [
+            "#SystemDesign",
+            "#SoftwareArchitecture",
+            "#DistributedSystems",
+            "#Backend",
+            "#SoftwareEngineering",
+            "#SelfGrowth",
+            "#TechCommunity",
+        ]
+    elif "ai" in cat_lower:
+        cat_badge = "[AI & Emerging Technologies]"
+        hashtags = [
+            "#ArtificialIntelligence",
+            "#MachineLearning",
+            "#AITechnologies",
+            "#TechInnovation",
+            "#SoftwareEngineering",
+            "#SelfGrowth",
+            "#TechCommunity",
+        ]
+    elif "web" in cat_lower or "javascript" in cat_lower:
+        cat_badge = "[Web Development]"
+        hashtags = [
+            "#WebDevelopment",
+            "#Frontend",
+            "#JavaScript",
+            "#ReactJS",
+            "#SoftwareEngineering",
+            "#SelfGrowth",
+            "#TechCommunity",
+        ]
+    else:
+        cat_badge = "[Computer Science Engineering]"
+        hashtags = [
+            "#ComputerScience",
+            "#SoftwareEngineering",
+            "#TrendingTech",
+            "#FullStackDevelopment",
+            "#SelfGrowth",
+            "#TechCommunity",
+        ]
+
     hashtags_str = " ".join(hashtags)
 
     # Human-formatted LinkedIn Post (Rich, engaging, professional)
-    linkedin_caption = f"""🚀 {title}
+    linkedin_caption = f"""🚀 {cat_badge}: {title}
 
-As full-stack developers and engineers, staying ahead of modern web architecture and technical shifts is key to building fast, scalable applications.
+As software engineers and full-stack developers, staying ahead of modern computer science practices, system architecture, and tech trends is key to building high-performance applications.
 
-💡 Key Insight:
+💡 Key Takeaway:
 {clean_desc if clean_desc else title}
 
-🛠️ Core Takeaways for Developers:
-• Optimize your system architecture & state management early.
-• Focus on clean code, security best practices, and user experience.
-• Prevent technical debt before scaling in production.
+🛠️ Core Engineering Takeaways:
+• Optimize system performance, state management, and memory efficiency.
+• Focus on clean code, security best practices, and scalable design patterns.
+• Prevent technical debt and build robust applications.
 
-What are your thoughts on this? How are you handling this in your current stack? Drop your thoughts below! 👇
+What are your thoughts on this? How are you applying this in your projects? Drop your thoughts below! 👇
 
 {hashtags_str}"""
 
     # Concise Twitter/X Tweet (<= 280 chars)
-    short_title = title[:150]
-    x_caption = f"🚀 [{category}] {short_title}\n\nKey Takeaway: {clean_desc[:70]}...\n\n#FullStackDeveloper #WebDev #DSA"
+    short_title = title[:140]
+    x_caption = f"🚀 {cat_badge}\n{short_title}\n\nKey Takeaway: {clean_desc[:65]}...\n\n{hashtags[0]} {hashtags[1]}"
     if len(x_caption) > 280:
-        x_caption = f"🚀 [{category}] {short_title[:170]}...\n\n#FullStackDeveloper #WebDev"
+        x_caption = f"🚀 {cat_badge}\n{short_title[:150]}...\n\n{hashtags[0]} {hashtags[1]}"
+
 
     post_data = {
         "caption": linkedin_caption,
