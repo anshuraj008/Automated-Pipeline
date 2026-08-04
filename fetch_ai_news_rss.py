@@ -12,14 +12,66 @@ from env_utils import new_ssl_context
 ctx = new_ssl_context()
 
 feeds = [
+    # AI & Tech Trends
     {
         "source": "TechCrunch AI",
+        "category": "AI",
         "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
     },
-    {"source": "VentureBeat AI", "url": "https://venturebeat.com/category/ai/feed/"},
-    {"source": "Wired AI", "url": "https://www.wired.com/feed/tag/ai/latest/rss"},
-    {"source": "MIT Tech Review AI", "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/"},
+    {
+        "source": "VentureBeat AI",
+        "category": "AI",
+        "url": "https://venturebeat.com/category/ai/feed/",
+    },
+    {
+        "source": "Wired AI",
+        "category": "AI",
+        "url": "https://www.wired.com/feed/tag/ai/latest/rss",
+    },
+    {
+        "source": "MIT Tech Review AI",
+        "category": "AI",
+        "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
+    },
+    # Full Stack & Web Development
+    {
+        "source": "Dev.to Web Dev",
+        "category": "Full Stack & Web Dev",
+        "url": "https://dev.to/feed/tag/webdev",
+    },
+    {
+        "source": "Dev.to JavaScript",
+        "category": "Full Stack & Web Dev",
+        "url": "https://dev.to/feed/tag/javascript",
+    },
+    {
+        "source": "Dev.to React",
+        "category": "Full Stack & Web Dev",
+        "url": "https://dev.to/feed/tag/react",
+    },
+    {
+        "source": "Smashing Magazine",
+        "category": "Full Stack & Web Dev",
+        "url": "https://www.smashingmagazine.com/feed/",
+    },
+    {
+        "source": "Hacker News Top",
+        "category": "Tech & Full Stack",
+        "url": "https://hnrss.org/frontpage?points=100",
+    },
+    # DSA & System Design
+    {
+        "source": "Dev.to DSA & Algorithms",
+        "category": "DSA & System Design",
+        "url": "https://dev.to/feed/tag/dsa",
+    },
+    {
+        "source": "Dev.to Computer Science",
+        "category": "DSA & System Design",
+        "url": "https://dev.to/feed/tag/compsci",
+    },
 ]
+
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
@@ -100,11 +152,13 @@ for feed in feeds:
 
                 news_item = {
                     "source": feed["source"],
+                    "category": feed.get("category", "General Tech"),
                     "title": title.strip(),
                     "description": clean_desc,
                     "pubDate": pub_date,
                     "url": link.strip(),
                 }
+
                 if link.strip() and link.strip() in seen_urls:
                     continue
                 if link.strip():

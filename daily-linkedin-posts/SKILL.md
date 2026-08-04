@@ -1,14 +1,15 @@
 ---
-name: daily-ai-update
-description: Antigravity workflow for one fresh AI-news post per run.
+name: daily-tech-post
+description: Antigravity workflow for Full Stack Development, DSA, and AI updates.
 ---
 
-# Daily AI Update Pipeline
+# Daily Technical Post Pipeline
 
-This repository covers only recent AI developments: model and product launches,
-surprising demonstrations, meaningful research with a practical result, and
-major AI industry events. Never mention or infer a personal project, employer,
-build log, founder journey, Reddit discussion, or unrelated startup content.
+This repository automates high-value technical posts across three core pillars:
+1. **Full Stack & Web Development** (React/Next.js, Node.js, Web Performance, System Architecture)
+2. **Data Structures & Algorithms (DSA)** (LeetCode patterns, Data Structures, Big-O trade-offs)
+3. **AI & Tech Trends** (Breaking AI releases, developer APIs, tech ecosystem news)
+
 
 ## Required run order
 
