@@ -182,15 +182,67 @@ def main():
     bullets_str = "\n".join(bullet_options)
     hashtags_str = " ".join(hashtags)
 
-    # Human-formatted LinkedIn Post
-    linkedin_caption = f"""🚀 {cat_badge}: {title}
+    layout_style = seed % 4
+    desc_content = full_linkedin_desc if full_linkedin_desc else title
+
+    if layout_style == 0:
+        # Style 0: Deep-Dive Breakdown (Badge + Title + Hook + The Big Picture + Engineering Lessons)
+        linkedin_caption = f"""🚀 {cat_badge}: {title}
 
 {selected_hook}
 
-💡 Key Takeaway:
-{full_linkedin_desc if full_linkedin_desc else title}
+💡 The Big Picture:
+{desc_content}
 
-🛠️ Core Engineering Takeaways:
+🛠️ Engineering Lessons:
+{bullets_str}
+
+{selected_cta}
+
+{hashtags_str}"""
+
+    elif layout_style == 1:
+        # Style 1: Architectural Focus (Badge + Title + Bullets First + Overview & Key Insights)
+        linkedin_caption = f"""🔥 {cat_badge}: {title}
+
+⚡ Core Architectural Principles:
+{bullets_str}
+
+📌 Overview & Key Insights:
+{desc_content}
+
+{selected_hook}
+
+{selected_cta}
+
+{hashtags_str}"""
+
+    elif layout_style == 2:
+        # Style 2: Tech Digest Style (Title Header + Direct Description + Why This Matters Bullets)
+        linkedin_caption = f"""💡 Tech Breakdown | {cat_badge}
+{title}
+
+{desc_content}
+
+🎯 Why This Matters for Developers:
+{bullets_str}
+
+{selected_hook}
+
+{selected_cta}
+
+{hashtags_str}"""
+
+    else:
+        # Style 3: Practice & Insights Style (Badge + Title + Hook + Takeaway Summary + Strategic Highlights)
+        linkedin_caption = f"""📌 {cat_badge}: {title}
+
+{selected_hook}
+
+🔍 Takeaway Summary:
+{desc_content}
+
+🚀 Strategic Highlights:
 {bullets_str}
 
 {selected_cta}
