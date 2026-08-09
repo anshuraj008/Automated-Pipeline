@@ -22,8 +22,8 @@ def main():
     )
     parser.add_argument(
         "--image-url",
-        required=True,
-        help="Public HTTPS URL of the Antigravity-generated image",
+        default="",
+        help="Public HTTPS URL of the Antigravity-generated image (optional)",
     )
     parser.add_argument(
         "--target",
@@ -41,6 +41,11 @@ def main():
         action="store_true",
         help="Schedule tomorrow instead of today",
     )
+    parser.add_argument(
+        "--time",
+        default="9:00 AM",
+        help="IST publish time (e.g. '9:00 AM', '4:00 PM')",
+    )
     args = parser.parse_args()
     py = sys.executable
 
@@ -48,7 +53,9 @@ def main():
     run([py, "validate_antigravity_output.py"])
 
     print("STEP 2/3 — Building exactly one Buffer post")
-    build_cmd = [py, "build_schedule.py", "--target", args.target, "--image-url", args.image_url]
+    build_cmd = [py, "build_schedule.py", "--target", args.target, "--time", args.time]
+    if args.image_url:
+        build_cmd.extend(["--image-url", args.image_url])
     if args.start_tomorrow:
         build_cmd.append("--start-tomorrow")
     run(build_cmd)

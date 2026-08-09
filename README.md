@@ -50,7 +50,7 @@ This creates:
 After Antigravity generates and publicly hosts the image:
 
 ```bash
-python3 run_pipeline.py --image-url https://public.example/image.png --live
+python3 run_pipeline.py --image-url "https://public.example/image.png" --live
 ```
 
 The command always previews first. Without `--live`, nothing is scheduled.

@@ -4,7 +4,7 @@
 import argparse
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -37,6 +37,18 @@ def main():
     publish_date = datetime.now().date()
     if args.start_tomorrow:
         publish_date += timedelta(days=1)
+    else:
+        # Check if the target time today has already passed in IST
+        IST_OFFSET = timedelta(hours=5, minutes=30)
+        try:
+            clean_time = args.time.strip().upper().replace("\u202f", " ").replace("\u00a0", " ")
+            dt_ist = datetime.strptime(f"{publish_date.isoformat()} {clean_time}", "%Y-%m-%d %I:%M %p")
+            dt_ist = dt_ist.replace(tzinfo=timezone(IST_OFFSET))
+            if dt_ist <= datetime.now(timezone(IST_OFFSET)):
+                print(f"Notice: Scheduled time {args.time} for today ({publish_date}) has already passed. Auto-scheduling for tomorrow.")
+                publish_date += timedelta(days=1)
+        except Exception:
+            pass
 
     schedule = {
         "channels": {"linkedin": "", "x": ""},
