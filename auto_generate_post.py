@@ -12,7 +12,7 @@ PROMPT_PATH = os.path.join(PROJECT_ROOT, "image_prompt.txt")
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--story-index", type=int, default=3, help="Index of news item in ai_news_data.json")
+    parser.add_argument("--story-index", type=int, default=0, help="Index of news item in ai_news_data.json")
     args = parser.parse_args()
 
     if not os.path.exists(NEWS_PATH):
@@ -55,6 +55,7 @@ def main():
     # Determine CS Engineering Category Tag & Hashtags
     cat_lower = (category + " " + title).lower()
     if "ai" in cat_lower or "claude" in cat_lower or "agent" in cat_lower or "llm" in cat_lower:
+        cat_type = "ai"
         cat_badge = "[AI & Emerging Technologies]"
         hashtags = [
             "#ArtificialIntelligence",
@@ -65,7 +66,13 @@ def main():
             "#SelfGrowth",
             "#TechCommunity",
         ]
+        bullet_options = [
+            "• Evaluate agent autonomy, context windows, and tool-use reliability.",
+            "• Design resilient fallback handlers to prevent cascading network failures.",
+            "• Balance inference latency, token budgets, and verifiable accuracy.",
+        ]
     elif "full stack" in cat_lower or "react" in cat_lower or "node" in cat_lower:
+        cat_type = "fullstack"
         cat_badge = "[Full Stack Development]"
         hashtags = [
             "#FullStackDevelopment",
@@ -77,7 +84,13 @@ def main():
             "#SelfGrowth",
             "#TechCommunity",
         ]
+        bullet_options = [
+            "• Optimize client/server rendering, bundle sizes, and network payloads.",
+            "• Enforce strict type definitions and predictable API contracts.",
+            "• Streamline developer workflows and automated testing pipelines.",
+        ]
     elif "dsa" in cat_lower or "algorithm" in cat_lower or "python" in cat_lower:
+        cat_type = "dsa"
         cat_badge = "[DSA & Algorithms]"
         hashtags = [
             "#DataStructures",
@@ -89,7 +102,13 @@ def main():
             "#SelfGrowth",
             "#TechCommunity",
         ]
+        bullet_options = [
+            "• Evaluate time and space complexity (Big O) trade-offs for high throughput.",
+            "• Choose memory-efficient data structures for specialized operations.",
+            "• Write deterministic, edge-case resilient algorithms.",
+        ]
     elif "system design" in cat_lower or "architecture" in cat_lower or "devops" in cat_lower:
+        cat_type = "sysdesign"
         cat_badge = "[System Design & Architecture]"
         hashtags = [
             "#SystemDesign",
@@ -100,7 +119,13 @@ def main():
             "#SelfGrowth",
             "#TechCommunity",
         ]
+        bullet_options = [
+            "• Focus on low-latency routing, load balancing, and fault tolerance.",
+            "• Decouple microservices with explicit boundaries and retry budgets.",
+            "• Eliminate single points of failure across infrastructure layers.",
+        ]
     elif "web" in cat_lower or "javascript" in cat_lower:
+        cat_type = "web"
         cat_badge = "[Web Development]"
         hashtags = [
             "#WebDevelopment",
@@ -111,7 +136,13 @@ def main():
             "#SelfGrowth",
             "#TechCommunity",
         ]
+        bullet_options = [
+            "• Improve Core Web Vitals, DOM rendering, and state hydration.",
+            "• Build accessible, component-driven user interfaces.",
+            "• Maintain clean, modular codebases with minimal bundle overhead.",
+        ]
     else:
+        cat_type = "cs"
         cat_badge = "[Computer Science Engineering]"
         hashtags = [
             "#ComputerScience",
@@ -121,27 +152,52 @@ def main():
             "#SelfGrowth",
             "#TechCommunity",
         ]
+        bullet_options = [
+            "• Focus on clean code, security best practices, and scalable design.",
+            "• Prevent technical debt while delivering reliable functionality.",
+            "• Continuously evaluate modern software engineering tools and patterns.",
+        ]
 
+    # Dynamic Intro Hooks (rotates based on story index & title hash)
+    seed = (idx + sum(ord(c) for c in title)) % 5
+    intro_hooks = [
+        "Staying updated with modern software engineering practices and system design is key to building high-performance applications.",
+        "Building scalable applications requires continuous learning across modern architectures, tools, and algorithms.",
+        "Here is a key technical breakdown every developer and software engineer should keep on their radar.",
+        "Navigating complex tech stack decisions comes down to understanding underlying engineering trade-offs.",
+        "Great software systems are built on clean patterns, performance optimization, and pragmatic technical choices.",
+    ]
+    selected_hook = intro_hooks[seed]
+
+    # Dynamic Call to Actions (rotates based on seed)
+    cta_options = [
+        "What are your thoughts on this? How are you applying this in your projects? Drop your thoughts below! 👇",
+        "Have you encountered similar trade-offs in production? Let's discuss in the comments below! 💬",
+        "How are you handling this in your technical stack? Would love to hear your insights! 🚀",
+        "What is your perspective on this approach? Share your thoughts below! 👇",
+        "Are you applying these architectural patterns in your current projects? Share your experience! 💬",
+    ]
+    selected_cta = cta_options[seed]
+
+    bullets_str = "\n".join(bullet_options)
     hashtags_str = " ".join(hashtags)
 
-    # Human-formatted LinkedIn Post (Rich, engaging, professional)
+    # Human-formatted LinkedIn Post
     linkedin_caption = f"""🚀 {cat_badge}: {title}
 
-As software engineers and full-stack developers, staying ahead of modern computer science practices, system architecture, and tech trends is key to building high-performance applications.
+{selected_hook}
 
 💡 Key Takeaway:
 {full_linkedin_desc if full_linkedin_desc else title}
 
 🛠️ Core Engineering Takeaways:
-• Optimize system performance, state management, and memory efficiency.
-• Focus on clean code, security best practices, and scalable design patterns.
-• Prevent technical debt and build robust applications.
+{bullets_str}
 
-What are your thoughts on this? How are you applying this in your projects? Drop your thoughts below! 👇
+{selected_cta}
 
 {hashtags_str}"""
 
-    # Complete Twitter/X Tweet (<= 280 chars, complete sentences without mid-word truncation)
+    # Dynamic X / Twitter Formats (rotates layout style)
     summary_for_x = clean_desc
     if len(summary_for_x) > 110:
         match = re.search(r'[^.!?]*[.!?]', summary_for_x[:110])
@@ -156,7 +212,12 @@ What are your thoughts on this? How are you applying this in your projects? Drop
 
     x_hashtags = f"{hashtags[0]} {hashtags[1]}" if len(hashtags) >= 2 else "#SoftwareEngineering"
 
-    x_caption = f"🚀 {cat_badge}\n{title}\n\n💡 {summary_for_x}\n\n{x_hashtags}"
+    if seed % 3 == 0:
+        x_caption = f"🚀 {cat_badge}\n{title}\n\n💡 {summary_for_x}\n\n{x_hashtags}"
+    elif seed % 3 == 1:
+        x_caption = f"⚡ Tech Insight | {cat_badge}\n{title}\n\n📌 Key Takeaway: {summary_for_x}\n\n{x_hashtags}"
+    else:
+        x_caption = f"🔥 {cat_badge}\n{title}\n\nSummary: {summary_for_x}\n\n{x_hashtags}"
 
     if len(x_caption) > 280:
         max_t_len = 280 - len(f"🚀 {cat_badge}\n\n\n\n{x_hashtags}")
