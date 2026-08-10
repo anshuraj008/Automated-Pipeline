@@ -186,8 +186,8 @@ def main():
     desc_content = full_linkedin_desc if full_linkedin_desc else title
 
     if layout_style == 0:
-        # Style 0: Deep-Dive Breakdown (Badge + Title + Hook + The Big Picture + Engineering Lessons)
-        linkedin_caption = f"""🚀 {cat_badge}: {title}
+        # Style 0: Deep-Dive Breakdown (Title + Hook + The Big Picture + Engineering Lessons)
+        linkedin_caption = f"""🚀 Technical Breakdown: {title}
 
 {selected_hook}
 
@@ -202,8 +202,8 @@ def main():
 {hashtags_str}"""
 
     elif layout_style == 1:
-        # Style 1: Architectural Focus (Badge + Title + Bullets First + Overview & Key Insights)
-        linkedin_caption = f"""🔥 {cat_badge}: {title}
+        # Style 1: Architectural Focus (Title + Bullets First + Overview & Key Insights)
+        linkedin_caption = f"""🔥 Engineering Focus: {title}
 
 ⚡ Core Architectural Principles:
 {bullets_str}
@@ -219,8 +219,7 @@ def main():
 
     elif layout_style == 2:
         # Style 2: Tech Digest Style (Title Header + Direct Description + Why This Matters Bullets)
-        linkedin_caption = f"""💡 Tech Breakdown | {cat_badge}
-{title}
+        linkedin_caption = f"""💡 Executive Tech Brief: {title}
 
 {desc_content}
 
@@ -234,8 +233,8 @@ def main():
 {hashtags_str}"""
 
     else:
-        # Style 3: Practice & Insights Style (Badge + Title + Hook + Takeaway Summary + Strategic Highlights)
-        linkedin_caption = f"""📌 {cat_badge}: {title}
+        # Style 3: Practice & Insights Style (Title + Hook + Takeaway Summary + Strategic Highlights)
+        linkedin_caption = f"""📌 Strategic Insights: {title}
 
 {selected_hook}
 
@@ -249,31 +248,56 @@ def main():
 
 {hashtags_str}"""
 
-    # Dynamic X / Twitter Formats (rotates layout style)
-    summary_for_x = clean_desc
-    if len(summary_for_x) > 110:
-        match = re.search(r'[^.!?]*[.!?]', summary_for_x[:110])
-        if match and match.end() > 20:
-            summary_for_x = summary_for_x[:match.end()].strip()
-        else:
-            space_idx = summary_for_x[:100].rfind(' ')
-            if space_idx > 30:
-                summary_for_x = summary_for_x[:space_idx].strip() + "."
-            else:
-                summary_for_x = summary_for_x[:90].strip()
-
+    # Dynamic X / Twitter Formats (sentence & clause aware, strictly <= 280 chars, no topic badges in header)
     x_hashtags = f"{hashtags[0]} {hashtags[1]}" if len(hashtags) >= 2 else "#SoftwareEngineering"
 
-    if seed % 3 == 0:
-        x_caption = f"🚀 {cat_badge}\n{title}\n\n💡 {summary_for_x}\n\n{x_hashtags}"
-    elif seed % 3 == 1:
-        x_caption = f"⚡ Tech Insight | {cat_badge}\n{title}\n\n📌 Key Takeaway: {summary_for_x}\n\n{x_hashtags}"
+    clean_desc_trimmed = clean_desc
+    for p_noise in ["the problem ", "the solution ", "overview: ", "summary: ", "abstract: "]:
+        if clean_desc_trimmed.lower().startswith(p_noise):
+            clean_desc_trimmed = clean_desc_trimmed[len(p_noise):].strip()
+
+    sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', clean_desc_trimmed) if s.strip()]
+
+    x_style = seed % 3
+    if x_style == 0:
+        prefix = f"🚀 {title}\n\n💡 Key Takeaway:\n"
+    elif x_style == 1:
+        prefix = f"⚡ Technical Briefing\n{title}\n\n📌 Insight: "
     else:
-        x_caption = f"🔥 {cat_badge}\n{title}\n\nSummary: {summary_for_x}\n\n{x_hashtags}"
+        prefix = f"🔥 {title}\n\nSummary: "
+
+    suffix = f"\n\n{x_hashtags}"
+    available_summary_len = 280 - len(prefix) - len(suffix)
+
+    fitted_summary = ""
+    for s in sentences:
+        test = (fitted_summary + " " + s).strip() if fitted_summary else s
+        if len(test) <= available_summary_len:
+            fitted_summary = test
+        else:
+            break
+
+    if not fitted_summary:
+        clauses = [c.strip() for c in re.split(r'[,;:]\s+|(?<=[.!?])\s+', clean_desc_trimmed) if c.strip()]
+        for c in clauses:
+            test = (fitted_summary + ", " + c).strip() if fitted_summary else c
+            if len(test) <= available_summary_len:
+                fitted_summary = test
+            else:
+                break
+
+    if fitted_summary and not fitted_summary.endswith(('.', '!', '?')):
+        fitted_summary += "."
+
+    if not fitted_summary:
+        fitted_summary = title
+
+    x_caption = f"{prefix}{fitted_summary}{suffix}"
 
     if len(x_caption) > 280:
-        max_t_len = 280 - len(f"🚀 {cat_badge}\n\n\n\n{x_hashtags}")
-        x_caption = f"🚀 {cat_badge}\n{title[:max_t_len]}\n\n{x_hashtags}"
+        max_t_len = 280 - len(f"🚀 \n\n{x_hashtags}")
+        short_title = title[:max_t_len].rsplit(' ', 1)[0] if ' ' in title[:max_t_len] else title[:max_t_len]
+        x_caption = f"🚀 {short_title}\n\n{x_hashtags}"
 
     post_data = {
         "caption": linkedin_caption,
