@@ -248,13 +248,13 @@ def main():
 
 {hashtags_str}"""
 
-    # Dynamic X / Twitter Formats (pure professional text, NO emojis/icons, NO hashtags)
+    # Dynamic X / Twitter Formats (pure professional text, NO emojis/icons, NO hashtags, strictly <= 278 chars)
     x_closing_texts = [
         "What are your thoughts on this? Share your perspective and let's connect.",
-        "Have you encountered similar technical trade-offs in production? Let's discuss.",
-        "How are you handling this in your technical stack? Share your insights.",
-        "What is your take on this engineering approach? Join the discussion below.",
-        "Are you applying these architectural patterns in your current stack? Let's connect.",
+        "Have you encountered similar trade-offs in production? Let's discuss.",
+        "How are you handling this in your stack? Share your insights.",
+        "What is your take on this approach? Join the discussion below.",
+        "Are you applying these patterns in your current stack? Let's connect.",
     ]
     x_closing_text = x_closing_texts[seed]
 
@@ -274,7 +274,7 @@ def main():
         prefix = f"Engineering Summary: {title}\nOverview: "
 
     suffix = f"\n{x_closing_text}"
-    available_summary_len = 300 - len(prefix) - len(suffix)
+    available_summary_len = 278 - len(prefix) - len(suffix)
 
     fitted_summary = ""
     for s in sentences:
@@ -301,10 +301,13 @@ def main():
 
     x_caption = f"{prefix}{fitted_summary}{suffix}"
 
-    if len(x_caption) > 300:
-        max_t_len = 300 - len(f"\n{x_closing_text}")
+    if len(x_caption) > 278:
+        max_t_len = 278 - len(f"\n{x_closing_text}")
         short_title = title[:max_t_len].rsplit(' ', 1)[0] if ' ' in title[:max_t_len] else title[:max_t_len]
         x_caption = f"{short_title}\n{x_closing_text}"
+
+    # Ensure x_caption is 100% emoji and icon free
+    x_caption = re.sub(r'[\U00010000-\U0010ffff\u2600-\u27ff\u2300-\u23ff\u200d]', '', x_caption).strip()
 
     post_data = {
         "caption": linkedin_caption,

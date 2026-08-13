@@ -52,7 +52,7 @@ UTC = timezone.utc
 # LinkedIn hard-truncates/rejects posts beyond this length.
 LINKEDIN_MAX_CHARS = 3000
 # Buffer/X max length threshold.
-X_MAX_CHARS = 300
+X_MAX_CHARS = 280
 
 
 def parse_time_ist_to_utc(date_str, time_ist):
