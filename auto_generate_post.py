@@ -248,8 +248,15 @@ def main():
 
 {hashtags_str}"""
 
-    # Dynamic X / Twitter Formats (sentence & clause aware, strictly <= 280 chars, no topic badges in header)
-    x_hashtags = f"{hashtags[0]} {hashtags[1]}" if len(hashtags) >= 2 else "#SoftwareEngineering"
+    # Dynamic X / Twitter Formats (pure professional text, NO emojis/icons, NO hashtags)
+    x_closing_texts = [
+        "What are your thoughts on this? Share your perspective and let's connect.",
+        "Have you encountered similar technical trade-offs in production? Let's discuss.",
+        "How are you handling this in your technical stack? Share your insights.",
+        "What is your take on this engineering approach? Join the discussion below.",
+        "Are you applying these architectural patterns in your current stack? Let's connect.",
+    ]
+    x_closing_text = x_closing_texts[seed]
 
     clean_desc_trimmed = clean_desc
     for p_noise in ["the problem ", "the solution ", "overview: ", "summary: ", "abstract: "]:
@@ -260,14 +267,14 @@ def main():
 
     x_style = seed % 3
     if x_style == 0:
-        prefix = f"🚀 {title}\n\n💡 Key Takeaway:\n"
+        prefix = f"{title}\nKey Takeaway:\n"
     elif x_style == 1:
-        prefix = f"⚡ Technical Briefing\n{title}\n\n📌 Insight: "
+        prefix = f"Technical Briefing: {title}\nKey Insight: "
     else:
-        prefix = f"🔥 {title}\n\nSummary: "
+        prefix = f"Engineering Summary: {title}\nOverview: "
 
-    suffix = f"\n\n{x_hashtags}"
-    available_summary_len = 280 - len(prefix) - len(suffix)
+    suffix = f"\n{x_closing_text}"
+    available_summary_len = 300 - len(prefix) - len(suffix)
 
     fitted_summary = ""
     for s in sentences:
@@ -294,10 +301,10 @@ def main():
 
     x_caption = f"{prefix}{fitted_summary}{suffix}"
 
-    if len(x_caption) > 280:
-        max_t_len = 280 - len(f"🚀 \n\n{x_hashtags}")
+    if len(x_caption) > 300:
+        max_t_len = 300 - len(f"\n{x_closing_text}")
         short_title = title[:max_t_len].rsplit(' ', 1)[0] if ' ' in title[:max_t_len] else title[:max_t_len]
-        x_caption = f"🚀 {short_title}\n\n{x_hashtags}"
+        x_caption = f"{short_title}\n{x_closing_text}"
 
     post_data = {
         "caption": linkedin_caption,
