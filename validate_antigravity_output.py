@@ -15,7 +15,7 @@ def main():
     if not os.path.exists(PROMPT_PATH):
         raise SystemExit("Antigravity must create image_prompt.txt first.")
 
-    with open(POST_PATH) as f:
+    with open(POST_PATH, encoding="utf-8") as f:
         post = json.load(f)
     caption = str(post.get("caption", "")).strip()
     if not caption:
@@ -26,7 +26,7 @@ def main():
     if not post.get("source_url"):
         raise SystemExit("linkedin_post.json must include source_url.")
 
-    with open(PROMPT_PATH) as f:
+    with open(PROMPT_PATH, encoding="utf-8") as f:
         prompt = f.read().strip()
     if len(prompt) < 120:
         raise SystemExit("image_prompt.txt is too short for a quality image brief.")

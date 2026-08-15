@@ -19,7 +19,7 @@ def main():
     parser.add_argument("--time", default="9:00 AM", help="IST publish time")
     args = parser.parse_args()
 
-    with open(os.path.join(PROJECT_ROOT, args.post_file)) as f:
+    with open(os.path.join(PROJECT_ROOT, args.post_file), encoding="utf-8") as f:
         post = json.load(f)
 
     caption = str(post.get("caption", "")).strip()
@@ -69,7 +69,7 @@ def main():
     }
 
     output_path = os.path.join(PROJECT_ROOT, args.output)
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(schedule, f, indent=2)
     print(f"Built {args.output} with exactly 1 post")
     print(f"  {publish_date} {args.time} IST | {args.target}")

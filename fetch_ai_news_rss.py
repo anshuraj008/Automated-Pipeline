@@ -210,7 +210,7 @@ all_news.sort(key=lambda item: parse_pub_date(item["pubDate"]), reverse=True)
 
 # Save to ai_news_data.json
 out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai_news_data.json")
-with open(out_path, "w") as f:
+with open(out_path, "w", encoding="utf-8") as f:
     json.dump(all_news, f, indent=2)
 
 print(f"Saved {len(all_news)} news items to {out_path}")

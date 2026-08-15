@@ -38,7 +38,7 @@ def load_env_file():
 
     env_vars = {}
     if os.path.exists(_ENV_PATH):
-        with open(_ENV_PATH) as f:
+        with open(_ENV_PATH, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:

@@ -285,7 +285,7 @@ def main():
         schedule["posts"].append(post)
     else:
         try:
-            with open(args.schedule_file) as f:
+            with open(args.schedule_file, encoding="utf-8") as f:
                 schedule = json.load(f)
         except FileNotFoundError:
             print(f"Schedule file not found: {args.schedule_file}")
